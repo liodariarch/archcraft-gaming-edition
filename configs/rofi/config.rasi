@@ -1,0 +1,18 @@
+/* Archcraft GE | Rofi configuration */
+configuration {
+    modi: "drun,run,window";
+    show-icons: true;
+    show-match: true;
+    matching: "fuzzy";
+    sort: true;
+    sorting-method: "fzf";
+    font: "JetBrains Mono 10";
+    terminal: "alacritty";
+    drun-display-format: "{name}";
+    display-drun: "APPS";
+    display-run: "RUN";
+    display-window: "WINDOWS";
+    sidebar-mode: false;
+}
+
+@theme "themes/archcraft-ge.rasi";

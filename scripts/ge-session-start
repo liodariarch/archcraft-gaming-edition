@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Lanzador opcional. No mata ni reemplaza procesos ya activos.
+set -u
+PICOM_CONF="$HOME/.config/picom/archcraft-ge.conf"
+DUNST_CONF="$HOME/.config/archcraft-ge/dunst/dunstrc"
+
+if command -v picom >/dev/null 2>&1 && ! pgrep -x picom >/dev/null 2>&1; then
+  if [[ -f "$PICOM_CONF" ]]; then
+    picom --config "$PICOM_CONF" --daemon >/dev/null 2>&1 || true
+  fi
+fi
+
+if command -v dunst >/dev/null 2>&1 && ! pgrep -x dunst >/dev/null 2>&1; then
+  if [[ -f "$DUNST_CONF" ]]; then
+    dunst -config "$DUNST_CONF" >/dev/null 2>&1 &
+  fi
+fi
+
+# Polybar se inicia manualmente con ge-polybar para no reemplazar una barra existente.

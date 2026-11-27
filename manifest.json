@@ -1,0 +1,24 @@
+{
+  "project": "Archcraft GE",
+  "version": "1.1.0",
+  "codename": "Deep Space",
+  "target": [
+    "Archcraft",
+    "Openbox",
+    "X11"
+  ],
+  "package_type": "configuration-bundle",
+  "installs_system_packages": false,
+  "modifies_openbox_autostart": false,
+  "components": [
+    "openbox",
+    "rofi",
+    "picom",
+    "dunst",
+    "polybar",
+    "alacritty",
+    "kitty",
+    "scripts",
+    "docs"
+  ]
+}

@@ -1,0 +1,7 @@
+# Archcraft GE | Rofimoji settings
+action = type
+selector = rofi
+typer = xdotool
+files = [emojis]
+skin-tone = neutral
+prompt = "😀 "

@@ -1,0 +1,21 @@
+/* Archcraft GE | Ember / Amber alternate palette */
+* {
+    bg: #11100f;
+    bg-alt: #201a17;
+    bg-soft: #33241e;
+    fg: #fff0e6;
+    muted: #b39a8b;
+    accent: #ff9b42;
+    accent-alt: #ff5d5d;
+    urgent: #ff4d6d;
+    background-color: @bg;
+    text-color: @fg;
+}
+window { width: 44%; border: 2px; border-color: @accent; border-radius: 12px; background-color: @bg; }
+mainbox { padding: 14px; spacing: 10px; }
+inputbar { padding: 10px 12px; border: 1px; border-color: @bg-soft; border-radius: 8px; background-color: @bg-alt; spacing: 10px; }
+prompt { text-color: @accent; }
+entry { placeholder: "Buscar aplicaciones..."; placeholder-color: @muted; }
+listview { lines: 8; columns: 1; fixed-height: false; spacing: 4px; scrollbar: false; }
+element { padding: 8px 10px; border-radius: 7px; background-color: transparent; text-color: @fg; }
+element selected { background-color: @accent; text-color: #1a100a; }

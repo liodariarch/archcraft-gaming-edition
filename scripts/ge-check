@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -u
+printf '\nARCHCRAFT GE | Diagnóstico rápido\n'
+printf '%s\n' '--------------------------------'
+for item in openbox rofi rofimoji xdotool picom polybar dunst alacritty kitty playerctl; do
+  if command -v "$item" >/dev/null 2>&1; then
+    printf '[OK]      %s\n' "$item"
+  else
+    printf '[OPCIONAL] %s no encontrado\n' "$item"
+  fi
+done
+printf '\nSesión: %s\n' "${XDG_SESSION_TYPE:-desconocida}"
+printf 'Escritorio: %s\n' "${XDG_CURRENT_DESKTOP:-desconocido}"
+printf 'Openbox rc.xml: %s\n' "$HOME/.config/openbox/rc.xml"

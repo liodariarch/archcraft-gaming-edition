@@ -1,0 +1,47 @@
+/* Archcraft GE | Deep Space / Cyan */
+* {
+    bg:         #0d111b;
+    bg-alt:     #151e2b;
+    bg-soft:    #1d2a3a;
+    fg:         #e6f1ff;
+    muted:      #8293a8;
+    accent:     #35d9ff;
+    accent-alt: #9b7bff;
+    urgent:     #ff8c42;
+    background-color: @bg;
+    text-color: @fg;
+}
+window {
+    width: 44%;
+    border: 2px;
+    border-color: @accent;
+    border-radius: 12px;
+    background-color: @bg;
+}
+mainbox { padding: 14px; spacing: 10px; }
+inputbar {
+    padding: 10px 12px;
+    border: 1px;
+    border-color: @bg-soft;
+    border-radius: 8px;
+    background-color: @bg-alt;
+    children: [ prompt, entry ];
+    spacing: 10px;
+}
+prompt { text-color: @accent; }
+entry { placeholder: "Buscar aplicaciones..."; placeholder-color: @muted; }
+listview { lines: 8; columns: 1; fixed-height: false; spacing: 4px; scrollbar: false; }
+element {
+    padding: 8px 10px;
+    border-radius: 7px;
+    background-color: transparent;
+    text-color: @fg;
+}
+element-icon { size: 22px; }
+element-text { vertical-align: 0.5; }
+element selected {
+    background-color: @accent;
+    text-color: #08121d;
+}
+element urgent { text-color: @urgent; }
+message { padding: 8px; text-color: @muted; }

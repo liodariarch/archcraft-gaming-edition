@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+if ! command -v rofi >/dev/null 2>&1; then
+  printf 'Archcraft GE: Rofi no está instalado.\n' >&2
+  exit 127
+fi
+THEME="$HOME/.config/rofi/themes/archcraft-ge.rasi"
+if [[ -f "$THEME" ]]; then
+  exec rofi -show drun -theme "$THEME" "$@"
+fi
+exec rofi -show drun "$@"

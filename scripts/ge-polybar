@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -euo pipefail
+if ! command -v polybar >/dev/null 2>&1; then
+  printf 'Archcraft GE: Polybar no está instalado.\n' >&2
+  exit 127
+fi
+CONFIG="$HOME/.config/archcraft-ge/polybar/config.ini"
+if [[ ! -f "$CONFIG" ]]; then
+  printf 'No se encontró el perfil: %s\n' "$CONFIG" >&2
+  printf 'Ejecuta primero el instalador de Archcraft GE.\n' >&2
+  exit 1
+fi
+MONITOR="${MONITOR:-$(polybar --list-monitors 2>/dev/null | sed -n '1{s/:.*//;p;}')}"
+export MONITOR
+exec polybar -c "$CONFIG" ge

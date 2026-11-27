@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+missing=()
+for cmd in rofimoji rofi xdotool; do
+  command -v "$cmd" >/dev/null 2>&1 || missing+=("$cmd")
+done
+if ((${#missing[@]})); then
+  printf 'Faltan dependencias del selector de emojis: %s\n' "${missing[*]}" >&2
+  exit 127
+fi
+exec rofimoji --selector rofi --typer xdotool --action type "$@"
