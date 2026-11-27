@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#050914">
+  <meta name="description" content="Archcraft GE: configuraciones, temas, herramientas y guías para personalizar Archcraft.">
+  <title>Archcraft GE | Gaming Edition</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #050914;
+      --bg-soft: #081326;
+      --panel: rgba(9, 22, 42, .88);
+      --panel-solid: #0a172b;
+      --line: rgba(49, 151, 255, .28);
+      --line-strong: rgba(0, 190, 255, .72);
+      --blue: #087cff;
+      --cyan: #00c8ff;
+      --cyan-soft: #70e7ff;
+      --text: #e9f4ff;
+      --muted: #9db3cb;
+      --green: #45e59a;
+      --black: #000000;
+      --radius: 18px;
+      --shadow: 0 20px 70px rgba(0, 111, 255, .12);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 88px; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      background:
+        radial-gradient(ellipse at 78% 8%, rgba(0, 105, 255, .15), transparent 38%),
+        radial-gradient(ellipse at 15% 45%, rgba(0, 190, 255, .07), transparent 34%),
+        var(--bg);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.6;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+    .container { width: min(1160px, calc(100% - 40px)); margin-inline: auto; }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--cyan-soft);
+      font-size: .76rem;
+      font-weight: 800;
+      letter-spacing: .19em;
+      text-transform: uppercase;
+    }
+    .eyebrow::before { content: ""; width: 23px; height: 1px; background: var(--cyan); box-shadow: 0 0 12px var(--cyan); }
+
+    /* ───────────────────────── BOOT SCREEN ───────────────────────── */
+    .boot-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      display: grid;
+      place-items: center;
+      overflow: auto;
+      padding: 28px 18px;
+      background:
+        radial-gradient(ellipse at 50% 20%, rgba(0, 106, 255, .2), transparent 43%),
+        linear-gradient(145deg, #02050b 0%, #071326 52%, #02050b 100%);
+      opacity: 1;
+      visibility: visible;
+      transition: opacity .45s ease, visibility .45s ease;
+    }
+    .boot-screen::before,
+    .boot-screen::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+      border: 1px solid rgba(0, 178, 255, .13);
+      border-radius: 50%;
+      width: min(78vw, 760px);
+      aspect-ratio: 1;
+      transform: rotate(-22deg) scaleY(.34);
+      box-shadow: 0 0 80px rgba(0, 115, 255, .08), inset 0 0 70px rgba(0, 115, 255, .05);
+    }
+    .boot-screen::after { width: min(105vw, 1050px); transform: rotate(22deg) scaleY(.29); }
+    .boot-screen.is-finished { opacity: 0; visibility: hidden; pointer-events: none; }
+    .boot-card {
+      position: relative;
+      z-index: 1;
+      width: min(760px, 100%);
+      border: 1px solid var(--line-strong);
+      border-radius: 22px;
+      padding: clamp(22px, 4vw, 38px);
+      background: rgba(2, 8, 18, .86);
+      box-shadow: 0 0 0 1px rgba(0, 190, 255, .08), 0 0 60px rgba(0, 116, 255, .17), var(--shadow);
+      backdrop-filter: blur(14px);
+    }
+    .boot-brand { display: flex; align-items: center; justify-content: center; gap: 18px; margin-bottom: 23px; }
+    .boot-brand img { width: 62px; height: 62px; object-fit: contain; filter: drop-shadow(0 0 15px rgba(0, 142, 255, .3)); }
+    .boot-brand strong { display: block; font-size: clamp(1.25rem, 4vw, 1.9rem); letter-spacing: .08em; }
+    .boot-brand strong span { color: var(--cyan); }
+    .boot-brand small { display: block; color: var(--muted); letter-spacing: .24em; font-size: .68rem; }
+    .boot-heading { display: flex; justify-content: space-between; align-items: center; gap: 18px; margin-bottom: 14px; }
+    .boot-heading h1 { margin: 0; font: 700 clamp(1rem, 3vw, 1.35rem)/1.3 ui-monospace, SFMono-Regular, Consolas, monospace; }
+    .boot-status { color: var(--cyan); font: 700 .85rem ui-monospace, monospace; white-space: nowrap; }
+    .progress-shell {
+      height: 17px;
+      width: 100%;
+      padding: 2px;
+      overflow: hidden;
+      border: 1px solid #086db9;
+      border-radius: 999px;
+      background: #000;
+      box-shadow: inset 0 0 12px rgba(0,0,0,.9), 0 0 16px rgba(0, 153, 255, .08);
+    }
+    .progress-fill {
+      width: 0%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #00cfff, #087cff);
+      box-shadow: 0 0 14px rgba(0, 183, 255, .65);
+      transition: width .08s linear;
+    }
+    .progress-meta { display: flex; justify-content: space-between; gap: 12px; margin: 8px 1px 21px; color: var(--muted); font: .75rem ui-monospace, monospace; }
+    .boot-current { min-height: 28px; margin: 0 0 14px; color: #fff; font: 600 1rem ui-monospace, monospace; }
+    .boot-current .prompt { color: var(--green); padding-right: 9px; }
+    .stage-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 18px; margin: 0 0 18px; padding: 0; list-style: none; }
+    .stage-list li { color: #657b94; font: .76rem ui-monospace, monospace; transition: color .2s ease; }
+    .stage-list li::before { content: "[  ]"; color: #49627d; margin-right: 8px; }
+    .stage-list li.done { color: #bdd3e9; }
+    .stage-list li.done::before { content: "[OK]"; color: var(--green); }
+    .stage-list li.active { color: #fff; }
+    .stage-list li.active::before { content: "[>>]"; color: var(--cyan); }
+    .boot-tools { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0 0 9px; }
+    .demo-label { color: #6e88a4; font: .65rem ui-monospace, monospace; letter-spacing: .12em; text-transform: uppercase; }
+    .ghost-button, .primary-button, .outline-button {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 9px;
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      padding: 10px 15px;
+      color: var(--cyan-soft);
+      background: rgba(0, 137, 255, .08);
+      cursor: pointer;
+      transition: .2s ease;
+    }
+    .ghost-button { padding: 7px 11px; font-size: .78rem; }
+    .ghost-button:hover, .outline-button:hover { background: rgba(0, 175, 255, .17); box-shadow: 0 0 22px rgba(0, 174, 255, .13); }
+    .boot-console, .site-console {
+      overflow: hidden;
+      border: 1px solid rgba(0, 159, 255, .37);
+      border-radius: 12px;
+      background: #02060d;
+    }
+    .console-head { display: flex; justify-content: space-between; align-items: center; padding: 9px 12px; border-bottom: 1px solid rgba(0, 159, 255, .2); color: var(--cyan-soft); font-size: .75rem; }
+    .console-head span:last-child { color: #718aa6; font: .65rem ui-monospace, monospace; }
+    .console-lines { height: 150px; overflow: auto; padding: 11px 13px; color: #a8c1db; font: .71rem/1.75 ui-monospace, SFMono-Regular, Consolas, monospace; scrollbar-color: #0969bb #000; }
+    .console-line { overflow-wrap: anywhere; }
+    .console-line .ok { color: var(--green); }
+    .console-line .time { color: #48aaff; }
+    .console-line .warn { color: #ffd477; }
+    .console-line .info { color: var(--cyan); }
+    .boot-console.is-hidden .console-lines, .site-console.is-hidden .console-lines { display: none; }
+    .boot-footnote { margin: 13px 0 0; color: #617992; text-align: center; font-size: .68rem; }
+
+    /* ───────────────────────── SITE HEADER ───────────────────────── */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid rgba(0, 182, 255, .24);
+      background: rgba(4, 10, 21, .88);
+      backdrop-filter: blur(16px);
+    }
+    .nav-wrap { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .brand { display: inline-flex; align-items: center; gap: 12px; flex-shrink: 0; }
+    .brand img { width: 42px; height: 42px; object-fit: contain; }
+    .brand-name { font-weight: 900; letter-spacing: .06em; line-height: 1.1; }
+    .brand-name span { color: var(--cyan); }
+    .brand-name small { display: block; margin-top: 4px; color: var(--muted); font-size: .58rem; font-weight: 600; letter-spacing: .22em; }
+    .nav-links { display: flex; align-items: center; gap: clamp(12px, 2.3vw, 28px); }
+    .nav-links a { color: #b8c8dc; font-size: .84rem; transition: color .2s ease; }
+    .nav-links a:hover { color: var(--cyan); }
+    .nav-github { border: 1px solid var(--line); border-radius: 9px; padding: 8px 12px; }
+
+    /* ───────────────────────── HERO ───────────────────────── */
+    .hero { position: relative; isolation: isolate; overflow: hidden; padding: 91px 0 76px; }
+    .hero::before {
+      content: "";
+      position: absolute;
+      z-index: -2;
+      width: 680px;
+      height: 680px;
+      top: -310px;
+      right: -70px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, rgba(0, 208, 255, .15), rgba(0, 73, 190, .12) 42%, transparent 69%);
+      border: 1px solid rgba(0, 177, 255, .15);
+      box-shadow: inset 0 0 80px rgba(0, 132, 255, .08), 0 0 120px rgba(0, 132, 255, .08);
+    }
+    .hero::after { content: ""; position: absolute; z-index: -1; left: -10%; right: -10%; bottom: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--cyan), transparent); box-shadow: 0 0 18px var(--cyan); }
+    .hero-grid { display: grid; grid-template-columns: 1.08fr .92fr; align-items: center; gap: 42px; }
+    .hero h1 { margin: 17px 0 15px; font-size: clamp(3.1rem, 7vw, 6.5rem); line-height: .94; letter-spacing: -.065em; }
+    .hero h1 span { color: var(--cyan); text-shadow: 0 0 36px rgba(0, 180, 255, .3); }
+    .hero-lead { max-width: 620px; color: var(--muted); font-size: clamp(1rem, 2vw, 1.18rem); line-height: 1.8; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 27px; }
+    .primary-button { background: linear-gradient(100deg, #00bce9, #087cff); color: #00101e; border: 0; font-weight: 850; padding: 12px 18px; }
+    .primary-button:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0, 155, 255, .2); }
+    .hero-note { margin-top: 22px; color: #718aa6; font: .72rem ui-monospace, monospace; letter-spacing: .13em; }
+    .hero-art { position: relative; min-height: 340px; display: grid; place-items: center; }
+    .orbit { position: absolute; width: min(100%, 420px); aspect-ratio: 1; border: 1px solid rgba(0, 185, 255, .45); border-radius: 50%; transform: rotate(-24deg) scaleY(.43); box-shadow: 0 0 25px rgba(0, 142, 255, .12), inset 0 0 25px rgba(0, 142, 255, .08); }
+    .orbit.orbit-two { width: min(86%, 360px); transform: rotate(35deg) scaleY(.5); border-color: rgba(13, 104, 255, .45); }
+    .hero-emblem { width: min(58%, 230px); height: auto; filter: drop-shadow(0 0 25px rgba(0, 128, 255, .32)); animation: float 6s ease-in-out infinite; }
+    .hero-chip { position: absolute; right: 0; bottom: 14px; border: 1px solid var(--line); border-radius: 12px; padding: 12px 15px; background: rgba(3, 12, 25, .84); color: var(--muted); font-size: .76rem; box-shadow: var(--shadow); }
+    .hero-chip strong { display: block; color: var(--cyan-soft); font-size: .95rem; }
+    @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+    /* ───────────────────────── CONTENT ───────────────────────── */
+    .section { padding: 75px 0; }
+    .section-head { display: flex; align-items: end; justify-content: space-between; gap: 25px; margin-bottom: 29px; }
+    .section-head h2 { margin: 8px 0 0; font-size: clamp(1.8rem, 4vw, 2.7rem); letter-spacing: -.04em; }
+    .section-head p { max-width: 440px; margin: 0; color: var(--muted); font-size: .9rem; }
+    .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 17px; }
+    .feature-card {
+      min-height: 250px;
+      padding: 23px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(145deg, rgba(13, 31, 57, .92), rgba(5, 13, 27, .93));
+      box-shadow: var(--shadow);
+      transition: transform .2s ease, border-color .2s ease;
+    }
+    .feature-card:hover { transform: translateY(-4px); border-color: var(--line-strong); }
+    .feature-visual { height: 92px; display: flex; align-items: center; justify-content: flex-start; margin-bottom: 15px; color: var(--cyan); }
+    .feature-visual svg { width: 100%; max-width: 230px; height: 92px; }
+    .feature-card h3 { margin: 0 0 8px; font-size: 1.08rem; }
+    .feature-card p { margin: 0; color: var(--muted); font-size: .86rem; line-height: 1.7; }
+    .feature-card a { display: inline-block; margin-top: 15px; color: var(--cyan-soft); font-size: .82rem; font-weight: 750; }
+    .split-section { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: stretch; }
+    .info-panel, .release-panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: clamp(23px, 4vw, 34px);
+      background: linear-gradient(145deg, rgba(9, 25, 48, .95), rgba(5, 12, 24, .95));
+      box-shadow: var(--shadow);
+    }
+    .info-panel h2, .release-panel h2 { margin: 9px 0 10px; font-size: 1.7rem; }
+    .info-panel p, .release-panel p { color: var(--muted); font-size: .9rem; line-height: 1.8; }
+    .pill-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 19px; }
+    .pill { padding: 6px 10px; border: 1px solid var(--line); border-radius: 999px; color: #a9dfff; font-size: .72rem; background: rgba(0, 130, 255, .06); }
+    .release-number { margin: 12px 0 0; color: var(--cyan); font: 800 clamp(2.1rem, 5vw, 3.2rem)/1 ui-monospace, monospace; }
+    .release-sub { color: var(--green); font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; }
+
+    /* ───────────────────────── LOG CONSOLE ON THE SITE ───────────────────────── */
+    .diagnostics { padding: 0 0 78px; }
+    .site-console { border-radius: var(--radius); box-shadow: var(--shadow); }
+    .site-console .console-lines { height: 190px; font-size: .76rem; }
+    .console-toolbar { display: flex; align-items: center; gap: 12px; }
+    .live-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 10px var(--green); margin-right: 6px; }
+    .diagnostic-note { margin: 10px 3px 0; color: #7188a2; font-size: .7rem; }
+
+    /* ───────────────────────── FOOTER ───────────────────────── */
+    .site-footer { border-top: 1px solid rgba(0, 181, 255, .35); background: rgba(2, 7, 15, .8); }
+    .footer-inner { min-height: 112px; display: flex; align-items: center; justify-content: space-between; gap: 25px; padding-block: 20px; }
+    .copyright { color: #899fb7; font-size: .77rem; }
+    .copyright strong { color: var(--text); }
+    .maker-credit { display: flex; align-items: center; gap: 13px; font-weight: 750; letter-spacing: .01em; }
+    .maker-credit img { width: 46px; height: 46px; object-fit: contain; filter: drop-shadow(0 0 12px rgba(0, 128, 255, .24)); }
+    .maker-credit span { color: var(--cyan); }
+    .footer-meta { color: #68829d; font: .66rem ui-monospace, monospace; letter-spacing: .12em; text-align: right; }
+
+    @media (max-width: 900px) {
+      .nav-wrap { align-items: flex-start; flex-direction: column; padding-block: 15px; gap: 12px; }
+      .nav-links { width: 100%; overflow-x: auto; padding-bottom: 3px; }
+      .hero-grid { grid-template-columns: 1fr; gap: 8px; }
+      .hero-art { min-height: 260px; }
+      .hero-emblem { width: 160px; }
+      .feature-grid { grid-template-columns: repeat(2, 1fr); }
+      .section-head { align-items: flex-start; flex-direction: column; }
+    }
+    @media (max-width: 620px) {
+      .container { width: min(100% - 28px, 1160px); }
+      .boot-card { padding: 19px 15px; }
+      .boot-heading { align-items: flex-start; flex-direction: column; gap: 4px; }
+      .stage-list { grid-template-columns: 1fr; gap: 6px; }
+      .console-lines { height: 125px; font-size: .65rem; }
+      .hero { padding: 67px 0 54px; }
+      .hero-art { min-height: 220px; }
+      .hero-chip { right: 2px; bottom: 0; }
+      .feature-grid, .split-section { grid-template-columns: 1fr; }
+      .feature-card { min-height: 0; }
+      .footer-inner { align-items: flex-start; flex-direction: column; }
+      .footer-meta { text-align: left; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <!-- BOOTLOADER VISUAL SIMULADO: no consulta ni arranca servicios reales. -->
+  <section class="boot-screen" id="bootScreen" aria-label="Pantalla de inicio de Archcraft GE">
+    <div class="boot-card">
+      <div class="boot-brand">
+        <img src="assets/arg0-labs.png" alt="Logotipo ARG0-Labs">
+        <div><strong>ARCHCRAFT <span>GE</span></strong><small>GAMING EDITION · ARG0-BOOT</small></div>
+      </div>
+
+      <div class="boot-heading">
+        <h1>Inicializando Archcraft GE...</h1>
+        <span class="boot-status" id="bootPercent">00%</span>
+      </div>
+      <div class="progress-shell" role="progressbar" aria-label="Progreso de inicio" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="bootProgress">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="progress-meta"><span>ARG0 INITIALIZATION SEQUENCE</span><span id="bootTimer">20.0 s</span></div>
+
+      <p class="boot-current" id="currentStage"><span class="prompt">&gt;</span> Preparando secuencia...</p>
+      <ul class="stage-list" id="stageList">
+        <li>cargando assets...</li>
+        <li>cargando configuraciones...</li>
+        <li>preparando archcraft...</li>
+        <li>inicializando servicios ARG0...</li>
+        <li>cargando ARG0-X...</li>
+        <li>cargando ARG0-Z...</li>
+        <li>buscando actualizaciones...</li>
+        <li>asumiendo comandos...</li>
+        <li>¡en linea!</li>
+      </ul>
+
+      <div class="boot-tools">
+        <span class="demo-label">BOOT LOG · SIMULACIÓN VISUAL</span>
+        <button class="ghost-button" type="button" data-toggle-console="bootConsole" aria-expanded="true">⌁ Toggle Logs</button>
+      </div>
+      <div class="boot-console" id="bootConsole">
+        <div class="console-head"><span>ARG0-BOOT / kernel-style output</span><span>DEMO · NO REAL SYSTEM LOGS</span></div>
+        <div class="console-lines" id="bootLogLines" aria-live="polite">
+          <div class="console-line"><span class="time">[  0.000000]</span> <span class="info">ARG0-BOOT:</span> Starting visual initialization sequence...</div>
+        </div>
+      </div>
+      <p class="boot-footnote">La animación dura 20 segundos. Los mensajes y registros son demostrativos.</p>
+    </div>
+  </section>
+
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="#inicio" aria-label="Archcraft GE, inicio">
+        <img src="assets/arg0-labs.png" alt="">
+        <span class="brand-name">ARCHCRAFT <span>GE</span><small>GAMING EDITION</small></span>
+      </a>
+      <nav class="nav-links" aria-label="Navegación principal">
+        <a href="#inicio">Inicio</a>
+        <a href="#proyecto">Proyecto</a>
+        <a href="#recursos">Recursos</a>
+        <a href="#version">Versión</a>
+        <a href="#registros">Registros</a>
+        <a class="nav-github" data-repo-path="" href="https://github.com/">GitHub ↗</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="inicio">
+      <div class="container hero-grid">
+        <div>
+          <span class="eyebrow">Archcraft Gaming Edition</span>
+          <h1>Tu entorno.<br><span>Tus reglas.</span></h1>
+          <p class="hero-lead">Archcraft GE reúne configuraciones, temas, herramientas y guías para personalizar tu entorno Archcraft. Un proyecto modular que puedes explorar, adaptar y mejorar a tu manera.</p>
+          <div class="hero-actions">
+            <a class="primary-button" data-repo-path="releases/latest" href="https://github.com/">Descargar última versión <span aria-hidden="true">↓</span></a>
+            <a class="outline-button" data-repo-path="" href="https://github.com/">Explorar repositorio <span aria-hidden="true">↗</span></a>
+          </div>
+          <div class="hero-note">OPENBOX · X11 · CONFIGURACIONES MODULARES · DEEP SPACE</div>
+        </div>
+        <div class="hero-art" aria-label="Emblema de Archcraft GE">
+          <div class="orbit"></div><div class="orbit orbit-two"></div>
+          <img class="hero-emblem" src="assets/arg0-labs.png" alt="Emblema azul de ARG0-Labs">
+          <div class="hero-chip"><strong>DEEP SPACE</strong>Perfil visual · v1.1.0</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="proyecto">
+      <div class="container">
+        <div class="section-head">
+          <div><span class="eyebrow">Conoce el proyecto</span><h2>Una base para personalizar.</h2></div>
+          <p>GE no pretende reemplazar Archcraft: ofrece recursos organizados para ajustar la experiencia de escritorio y construir una configuración propia.</p>
+        </div>
+        <div class="feature-grid">
+          <article class="feature-card">
+            <div class="feature-visual" aria-hidden="true">
+              <svg viewBox="0 0 230 92" fill="none"><rect x="8" y="8" width="175" height="70" rx="8" stroke="#168DFF" stroke-width="1.5"/><path d="M8 23h175" stroke="#168DFF"/><circle cx="20" cy="16" r="2" fill="#00C8FF"/><circle cx="29" cy="16" r="2" fill="#00C8FF"/><circle cx="38" cy="16" r="2" fill="#00C8FF"/><rect x="19" y="34" width="49" height="34" rx="4" fill="#0D3763" stroke="#00C8FF"/><rect x="77" y="34" width="92" height="7" rx="3" fill="#087CFF" opacity=".8"/><rect x="77" y="47" width="76" height="5" rx="2" fill="#4D82B8"/><rect x="77" y="58" width="84" height="5" rx="2" fill="#4D82B8"/><path d="M95 81h35l8 7H87l8-7Z" fill="#087CFF"/></svg>
+            </div>
+            <h3>Configuraciones</h3>
+            <p>Archivos de Openbox y ajustes para componentes de escritorio. Revisa cada módulo antes de aplicarlo a tu instalación.</p>
+            <a data-repo-path="tree/main/configs" href="https://github.com/">Ver configuraciones →</a>
+          </article>
+          <article class="feature-card">
+            <div class="feature-visual" aria-hidden="true">
+              <svg viewBox="0 0 230 92" fill="none"><rect x="9" y="8" width="176" height="72" rx="8" stroke="#168DFF"/><rect x="18" y="17" width="158" height="54" rx="5" fill="#061326"/><path d="M30 58 57 27l25 31" stroke="#00C8FF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="m99 52 14-17 15 17" stroke="#087CFF" stroke-width="4" stroke-linecap="round"/><circle cx="153" cy="34" r="9" stroke="#00C8FF" stroke-width="2"/><path d="M153 23v22M142 34h22" stroke="#00C8FF"/><path d="M81 85h33" stroke="#168DFF" stroke-width="2"/></svg>
+            </div>
+            <h3>Temas y apariencia</h3>
+            <p>Estilos para Rofi y otros elementos visuales. Ajusta colores, transparencias y detalles para dar identidad a tu escritorio.</p>
+            <a data-repo-path="tree/main/themes" href="https://github.com/">Explorar temas →</a>
+          </article>
+          <article class="feature-card">
+            <div class="feature-visual" aria-hidden="true">
+              <svg viewBox="0 0 230 92" fill="none"><path d="M40 23c-5-9-18-6-20 5l-5 24c-2 11 9 19 18 12l16-12h39l16 12c9 7 20-1 18-12l-5-24c-2-11-15-14-20-5H40Z" stroke="#168DFF" stroke-width="2.5"/><path d="M42 34v20M32 44h20" stroke="#00C8FF" stroke-width="4" stroke-linecap="round"/><circle cx="91" cy="39" r="4" fill="#00C8FF"/><circle cx="103" cy="49" r="4" fill="#087CFF"/><path d="M143 26h60M143 42h44M143 58h53" stroke="#168DFF" stroke-width="5" stroke-linecap="round"/><path d="m157 15 8 8-8 8" stroke="#00C8FF" stroke-width="2"/></svg>
+            </div>
+            <h3>Scripts y utilidades</h3>
+            <p>Herramientas auxiliares para instalar, revisar y gestionar componentes. Lee sus instrucciones antes de ejecutarlas.</p>
+            <a data-repo-path="tree/main/scripts" href="https://github.com/">Ver herramientas →</a>
+          </article>
+          <article class="feature-card">
+            <div class="feature-visual" aria-hidden="true">
+              <svg viewBox="0 0 230 92" fill="none"><path d="M25 14h119l26 26v39H25V14Z" stroke="#168DFF" stroke-width="1.5"/><path d="M144 14v26h26" stroke="#168DFF"/><path d="M43 36h77M43 48h91M43 60h64" stroke="#00C8FF" stroke-width="4" stroke-linecap="round"/><path d="m194 39 10 10-10 10M203 49h-24" stroke="#087CFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <h3>Guías y documentación</h3>
+            <p>Pasos de instalación, dependencias, atajos y solución de problemas para que puedas entender qué cambia cada módulo.</p>
+            <a data-repo-path="tree/main/docs" href="https://github.com/">Leer documentación →</a>
+          </article>
+          <article class="feature-card">
+            <div class="feature-visual" aria-hidden="true">
+              <svg viewBox="0 0 230 92" fill="none"><circle cx="58" cy="44" r="29" stroke="#168DFF" stroke-width="2"/><ellipse cx="58" cy="44" rx="45" ry="14" stroke="#00C8FF" stroke-width="2" transform="rotate(-25 58 44)"/><circle cx="96" cy="24" r="5" fill="#00C8FF"/><path d="M119 26h78M119 43h62M119 60h71" stroke="#168DFF" stroke-width="5" stroke-linecap="round"/></svg>
+            </div>
+            <h3>Perfiles visuales</h3>
+            <p>Una organización pensada para separar estilos y opciones. Personaliza los archivos según el hardware y las preferencias de tu equipo.</p>
+            <a data-repo-path="tree/main/profiles" href="https://github.com/">Ver perfiles →</a>
+          </article>
+          <article class="feature-card">
+            <div class="feature-visual" aria-hidden="true">
+              <svg viewBox="0 0 230 92" fill="none"><path d="M23 70 54 18l31 52H23Z" stroke="#00C8FF" stroke-width="2"/><path d="m54 39 9 16H45l9-16Z" fill="#087CFF"/><path d="M108 25h92M108 44h72M108 63h82" stroke="#168DFF" stroke-width="5" stroke-linecap="round"/><circle cx="193" cy="25" r="4" fill="#45E59A"/></svg>
+            </div>
+            <h3>Proyecto abierto</h3>
+            <p>Explora el código, revisa los cambios y aporta sugerencias. La evolución del proyecto se organiza desde su repositorio.</p>
+            <a data-repo-path="issues" href="https://github.com/">Ver actividad →</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="recursos" style="padding-top:0">
+      <div class="container split-section">
+        <article class="info-panel">
+          <span class="eyebrow">Sobre Archcraft GE</span>
+          <h2>Personalización con intención.</h2>
+          <p>Archcraft GE es una colección de configuraciones y recursos comunitarios que amplía las posibilidades de personalización de Archcraft. Su enfoque es modular: puedes consultar los archivos, seleccionar lo que te sirva y mantener el control de tu entorno.</p>
+          <p>Antes de aplicar cualquier configuración, realiza una copia de seguridad y comprueba los programas requeridos en la documentación correspondiente.</p>
+          <div class="pill-row"><span class="pill">Openbox</span><span class="pill">X11</span><span class="pill">Rofi</span><span class="pill">Polybar</span><span class="pill">Linux</span></div>
+        </article>
+        <article class="release-panel" id="version">
+          <span class="eyebrow">Última versión publicada</span>
+          <div class="release-number">v1.1.0</div>
+          <div class="release-sub">Deep Space</div>
+          <p>Configuraciones y utilidades organizadas por componentes, con documentación de instalación y notas para una integración más segura.</p>
+          <a class="primary-button" data-repo-path="releases/latest" href="https://github.com/">Abrir descargas ↗</a>
+        </article>
+      </div>
+    </section>
+
+    <section class="diagnostics" id="registros">
+      <div class="container">
+        <div class="section-head">
+          <div><span class="eyebrow">ARG0-BOOT</span><h2>Registro de inicio</h2></div>
+          <p>Una consola visual inspirada en el arranque de Linux. Los registros son ficticios y forman parte de la presentación de la página.</p>
+        </div>
+        <div class="site-console" id="siteConsole">
+          <div class="console-head">
+            <span>root@archcraft-ge:~# journal-view --demo</span>
+            <div class="console-toolbar"><span><i class="live-dot"></i>SIMULADO</span><button class="ghost-button" type="button" data-toggle-console="siteConsole" aria-expanded="true">⌁ Toggle Logs</button></div>
+          </div>
+          <div class="console-lines" id="siteLogLines">
+            <div class="console-line"><span class="time">[  0.084201]</span> <span class="ok">[  OK  ]</span> ARG0-BOOT: visual initialization complete.</div>
+            <div class="console-line"><span class="time">[  0.631883]</span> <span class="ok">[  OK  ]</span> systemd[1]: Reached target GE assets.</div>
+            <div class="console-line"><span class="time">[  1.412006]</span> <span class="info">[ INFO ]</span> openbox-profile: Deep Space profile selected.</div>
+            <div class="console-line"><span class="time">[  2.930144]</span> <span class="ok">[  OK  ]</span> ARG0-X: interface layer ready (demo).</div>
+            <div class="console-line"><span class="time">[  4.170522]</span> <span class="ok">[  OK  ]</span> ARG0-Z: service layer ready (demo).</div>
+            <div class="console-line"><span class="time">[  6.285913]</span> <span class="warn">[ WARN ]</span> updater: external update check is not connected.</div>
+            <div class="console-line"><span class="time">[  8.000000]</span> <span class="ok">[  OK  ]</span> ge-shell: Welcome to Archcraft GE.</div>
+          </div>
+        </div>
+        <p class="diagnostic-note">Nota: esta consola no lee el sistema operativo, no ejecuta comandos y no comprueba actualizaciones reales.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="copyright">© <strong id="copyrightYear">2026</strong> Archcraft GE. Todos los derechos reservados.<br>Proyecto comunitario de personalización Linux.</div>
+      <div class="maker-credit"><img src="assets/arg0-labs.png" alt="Logotipo ARG0-Labs"><div>Hecho por <span>ARG0-Labs</span></div></div>
+      <div class="footer-meta">LINUX · GAMING · CUSTOMIZATION<br>DEEP SPACE EDITION</div>
+    </div>
+  </footer>
+
+  <script>
+    "use strict";
+
+    /* CAMBIA ESTE VALOR POR TU USUARIO DE GITHUB ANTES DE PUBLICAR. */
+    const GITHUB_OWNER = "TU_USUARIO_GITHUB";
+    const GITHUB_REPOSITORY = "Archcraft-GE";
+    const repositoryBase = `https://github.com/${GITHUB_OWNER}/${GITHUB_REPOSITORY}`;
+
+    document.querySelectorAll("[data-repo-path]").forEach((link) => {
+      const path = link.getAttribute("data-repo-path") || "";
+      link.href = path ? `${repositoryBase}/${path}` : repositoryBase;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+    });
+    document.getElementById("copyrightYear").textContent = String(new Date().getFullYear());
+
+    // Toggle Logs: funciona tanto en el bootloader como en la consola de la página.
+    document.querySelectorAll("[data-toggle-console]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const target = document.getElementById(button.dataset.toggleConsole);
+        if (!target) return;
+        const hidden = target.classList.toggle("is-hidden");
+        button.setAttribute("aria-expanded", String(!hidden));
+        button.textContent = hidden ? "⌁ Mostrar Logs" : "⌁ Toggle Logs";
+      });
+    });
+
+    // Secuencia ficticia de 20 segundos. Los hitos irregulares producen velocidad variable.
+    const BOOT_DURATION = 20000;
+    const stageData = [
+      { at: 650, text: "cargando assets..." },
+      { at: 2550, text: "cargando configuraciones..." },
+      { at: 4750, text: "preparando archcraft..." },
+      { at: 7100, text: "inicializando servicios ARG0..." },
+      { at: 9450, text: "cargando ARG0-X..." },
+      { at: 11900, text: "cargando ARG0-Z..." },
+      { at: 14550, text: "buscando actualizaciones..." },
+      { at: 17150, text: "asumiendo comandos..." },
+      { at: 19800, text: "¡en linea!" }
+    ];
+    const progressCurve = [
+      [0, 0], [650, 3], [2550, 12], [4750, 22], [7100, 39],
+      [9450, 51], [11900, 68], [14550, 79], [17150, 94], [20000, 100]
+    ];
+    const bootLogData = [
+      [180, "ARG0-BOOT: firmware interface handshake complete.", "ok"],
+      [1050, "kernel: mounting visual asset layer...", "info"],
+      [2280, "systemd[1]: Reached target GE configuration stage.", "ok"],
+      [3920, "openbox-profile: preparing Deep Space environment.", "info"],
+      [5740, "ARG0-SVC: initializing presentation services (demo).", "ok"],
+      [8080, "ARG0-X: interface subsystem ready (simulated).", "ok"],
+      [10400, "ARG0-Z: utility subsystem ready (simulated).", "ok"],
+      [13280, "updater: update channel check is illustrative only.", "warn"],
+      [15950, "shell: command interface staged (demo).", "info"],
+      [18520, "systemd[1]: Reached target Archcraft GE startup.", "ok"],
+      [20000, "ARG0-BOOT: ¡en linea! Startup sequence completed.", "ok"]
+    ];
+
+    const bootScreen = document.getElementById("bootScreen");
+    const progressFill = document.getElementById("progressFill");
+    const progressBar = document.getElementById("bootProgress");
+    const percentLabel = document.getElementById("bootPercent");
+    const timerLabel = document.getElementById("bootTimer");
+    const currentStage = document.getElementById("currentStage");
+    const stageItems = Array.from(document.querySelectorAll("#stageList li"));
+    const bootLogLines = document.getElementById("bootLogLines");
+
+    function interpolateProgress(elapsed) {
+      for (let i = 1; i < progressCurve.length; i++) {
+        const [endTime, endValue] = progressCurve[i];
+        const [startTime, startValue] = progressCurve[i - 1];
+        if (elapsed <= endTime) {
+          const local = (elapsed - startTime) / (endTime - startTime);
+          return startValue + (endValue - startValue) * Math.max(0, Math.min(1, local));
+        }
+      }
+      return 100;
+    }
+
+    function appendBootLog(entry) {
+      const seconds = (entry[0] / 1000).toFixed(6).padStart(9, " ");
+      const row = document.createElement("div");
+      row.className = "console-line";
+      const time = document.createElement("span");
+      time.className = "time";
+      time.textContent = `[${seconds}] `;
+      const tag = document.createElement("span");
+      tag.className = entry[2] === "warn" ? "warn" : entry[2] === "info" ? "info" : "ok";
+      tag.textContent = entry[2] === "warn" ? "[ WARN ] " : entry[2] === "info" ? "[ INFO ] " : "[  OK  ] ";
+      row.append(time, tag, document.createTextNode(entry[1]));
+      bootLogLines.appendChild(row);
+      bootLogLines.scrollTop = bootLogLines.scrollHeight;
+    }
+
+    let stageIndex = -1;
+    let logIndex = 0;
+    let startedAt = 0;
+    let finished = false;
+
+    function updateBoot(now) {
+      if (finished) return;
+      const elapsed = Math.min(now - startedAt, BOOT_DURATION);
+      const progress = interpolateProgress(elapsed);
+      const rounded = Math.floor(progress);
+      progressFill.style.width = `${progress}%`;
+      percentLabel.textContent = `${String(rounded).padStart(2, "0")}%`;
+      progressBar.setAttribute("aria-valuenow", String(rounded));
+      timerLabel.textContent = `${Math.max(0, (BOOT_DURATION - elapsed) / 1000).toFixed(1)} s`;
+
+      while (stageIndex + 1 < stageData.length && elapsed >= stageData[stageIndex + 1].at) {
+        stageIndex++;
+        currentStage.innerHTML = `<span class="prompt">&gt;</span>${stageData[stageIndex].text}`;
+        stageItems.forEach((item, index) => {
+          item.classList.toggle("done", index < stageIndex);
+          item.classList.toggle("active", index === stageIndex);
+        });
+      }
+      while (logIndex < bootLogData.length && elapsed >= bootLogData[logIndex][0]) {
+        appendBootLog(bootLogData[logIndex]);
+        logIndex++;
+      }
+
+      if (elapsed >= BOOT_DURATION) {
+        finished = true;
+        progressFill.style.width = "100%";
+        percentLabel.textContent = "100%";
+        timerLabel.textContent = "0.0 s";
+        currentStage.innerHTML = '<span class="prompt">&gt;</span>¡en linea!';
+        stageItems.forEach((item, index) => {
+          item.classList.toggle("done", index < stageItems.length - 1);
+          item.classList.toggle("active", index === stageItems.length - 1);
+        });
+        window.setTimeout(() => bootScreen.classList.add("is-finished"), 220);
+        window.setTimeout(() => bootScreen.remove(), 760);
+        return;
+      }
+      window.requestAnimationFrame(updateBoot);
+    }
+
+    // Si el navegador no permite animación por rendimiento, requestAnimationFrame
+    // sigue midiendo el tiempo real para mantener los 20 segundos de duración.
+    startedAt = performance.now();
+    window.requestAnimationFrame(updateBoot);
+  </script>
+</body>
+</html>
